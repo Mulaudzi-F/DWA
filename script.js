@@ -9,15 +9,18 @@ form.addEventListener("submit", (event) => {
   
   result.innerText = dividend / divider;
 
+  //------------- Making the number interger if the value is a decimal---------------//
+ 
   if(!(dividend % divider ==0)) {
     result.innerText = Math.floor(dividend/ divider)
   }
  
-
+//-------------------------Checking  if one of the input is not empty string--------------------//
   if(dividend =="" || divider ==""){
     result.innerText = "Division not performed. Both values are required in inuts. Try again"
-  } 
+  }  
 
+//-----------------prevent Maths operations where  divider is negative-------------------------------//
  if(divider <0){
     result.innerText = "Division not performed.Invalid number provided.Try again" 
 
@@ -25,10 +28,14 @@ form.addEventListener("submit", (event) => {
     )
   } 
   
-  if(isNaN(dividend) || isNaN(divider)){
+//------------------Crushing the programm if one of the input is not a number-------------------//
+  if(isNaN(dividend) || isNaN(divider)){ 
+    document.querySelector('body').innerText =`
+    Something critical went wrong.Please reload the page
+    `
    throw new Error("Something critical went wrong.Please reload the page")
 
-    console.error("Something critical went wrong.Please reload the page")
+    
   } 
  
 }); 
