@@ -43,25 +43,42 @@ for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
     const preview = createPreview({author,id,image,title}) 
    
     starting.appendChild(preview) 
+    
 }
 
-document.querySelector('[data-list-items]').appendChild(starting)
+//document.querySelector('[data-list-items]').appendChild(starting)
 
-/**@type {DocumentFragment} */
-const genreHtml = document.createDocumentFragment() 
+// /**@type {DocumentFragment} */
+// const genreHtml = document.createDocumentFragment() 
 
-/**@type {HTMLOptionElement} */
-const firstGenreElement = document.createElement('option')
-firstGenreElement.value = 'any'
-firstGenreElement.innerText = 'All Genres'
-genreHtml.appendChild(firstGenreElement)
+// /**@type {HTMLOptionElement} */
+// const firstGenreElement = document.createElement('option')
+// firstGenreElement.value = 'any'
+// firstGenreElement.innerText = 'All Genres'
+// genreHtml.appendChild(firstGenreElement) 
 
+const SearchOptions = (Cartegory) =>{
+   const filterOption = document.createDocumentFragment()
+
+     
+    const optionElement = document.createElement('option')
+    optionElement.value = 'any'
+    optionElement.innerText = `All ${Cartegory}`
+    filterOption.appendChild(optionElement) 
+            
+            return filterOption
+    }
+  
+    
 //Loop through genress and create option Element
 for (const [id, name] of Object.entries(genres)) {
-    const element = document.createElement('option')
+    const element = document.createElement('option') 
     element.value = id
     element.innerText = name
-    genreHtml.appendChild(element)
+    const filterCategory = SearchOptions('genres')
+    filterCategory.appendChild(element) 
+    console.log(filterCategory)
+    
 }
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml)
