@@ -7,12 +7,14 @@ let matches = books
 const starting = document.createDocumentFragment() 
 /**
  * 
- * @param {string} author 
- * @param {string} id 
- * @param {string} image 
- * @param {string} title 
+ * Create a preview button for a book.
+ * @param {Object} book - Details of the book
+ * @param {string} book.author - Name of author
+ * @param {string} book.id - The book's unique Id
+ * @param {string} book.image - Url of the book cover image
+ * @param {string} book.title- book's title
  * 
- * @returns {button} - return button containing all details of specific book
+ * @returns {ButtonElement} - button containing all details of specific book
  */
 
 const createPreview =({author, id, image, title}) =>{
@@ -34,21 +36,27 @@ const createPreview =({author, id, image, title}) =>{
     return element
 }
 
+// Loop through matches and create preview buttons
+
 for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
    
     const preview = createPreview({author,id,image,title}) 
-    
-    starting.appendChild(preview)
+   
+    starting.appendChild(preview) 
 }
 
 document.querySelector('[data-list-items]').appendChild(starting)
 
-const genreHtml = document.createDocumentFragment()
+/**@type {DocumentFragment} */
+const genreHtml = document.createDocumentFragment() 
+
+/**@type {HTMLOptionElement} */
 const firstGenreElement = document.createElement('option')
 firstGenreElement.value = 'any'
 firstGenreElement.innerText = 'All Genres'
 genreHtml.appendChild(firstGenreElement)
 
+//Loop through genress and create option Element
 for (const [id, name] of Object.entries(genres)) {
     const element = document.createElement('option')
     element.value = id
@@ -58,12 +66,16 @@ for (const [id, name] of Object.entries(genres)) {
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml)
 
+/**@type {DocumentFragment} */
 const authorsHtml = document.createDocumentFragment()
+
+/**@type {HTMLOptionElement} */
 const firstAuthorElement = document.createElement('option')
 firstAuthorElement.value = 'any'
 firstAuthorElement.innerText = 'All Authors'
 authorsHtml.appendChild(firstAuthorElement)
 
+//Looping through authors and create option elements.
 for (const [id, name] of Object.entries(authors)) {
     const element = document.createElement('option')
     element.value = id
@@ -73,6 +85,8 @@ for (const [id, name] of Object.entries(authors)) {
 
 document.querySelector('[data-search-authors]').appendChild(authorsHtml)
 
+
+//Check and set the initial theme based on system preference
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
     document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
@@ -91,27 +105,46 @@ document.querySelector('[data-list-button]').innerHTML = `
     <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `
 
+/**
+ * Handles the click event when canceling the search
+ */
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
 })
 
+/**
+ * Handles the click event when canceling the settings
+ */
 document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
     document.querySelector('[data-settings-overlay]').open = false
 })
 
+
+/**
+ * Handles the click event when initiating a search
+ */
 document.querySelector('[data-header-search]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = true 
     document.querySelector('[data-search-title]').focus()
 })
 
+/**
+ *  Handles the click event when opening settings
+ */
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
     document.querySelector('[data-settings-overlay]').open = true 
 })
+
 
 document.querySelector('[data-list-close]').addEventListener('click', () => {
     document.querySelector('[data-list-active]').open = false
 })
 
+/**
+ * Handles the form submission for changing the theme 
+ * 
+ *  @param {event} event - The form submission event
+ */
 document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
@@ -128,6 +161,12 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     document.querySelector('[data-settings-overlay]').open = false
 })
 
+/**
+ * Handles the form submission for filtering books.
+ * 
+ * @param {Event} event - The form submission for filtering books
+ * 
+ */
 document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
