@@ -4,7 +4,17 @@ import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 let page = 1;
 let matches = books
 
-const starting = document.createDocumentFragment() 
+/**
+ * 
+ * @returns  fragment to hold books
+ */
+const fragment = () =>{
+   const booksfragment = document.createDocumentFragment() 
+
+   return booksfragment
+
+}
+
 /**
  * 
  * Create a preview button for a book.
@@ -36,31 +46,36 @@ const createPreview =({author, id, image, title}) =>{
     return element
 }
 
-// Loop through matches and create preview buttons
 
-for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
+/**
+ * Loop through books portion and create preview buttons
+ * 
+ * @param {Array} booksSlice- Portion of books to appear on the fragment
+ * @returns {fragment}- fragment with a specific portion of books
+ * 
+ */
+
+const sliceBooks =(booksSlice)=>{
+for (const { author, id, image, title } of booksSlice) {
    
     const preview = createPreview({author,id,image,title}) 
-   
-    starting.appendChild(preview) 
-    
-}
+    return fragment().appendChild(preview)
+} 
 
-//document.querySelector('[data-list-items]').appendChild(starting)
+} 
 
-// /**@type {DocumentFragment} */
-// const genreHtml = document.createDocumentFragment() 
+sliceBooks(matches.slice(0, BOOKS_PER_PAGE)) 
 
-// /**@type {HTMLOptionElement} */
-// const firstGenreElement = document.createElement('option')
-// firstGenreElement.value = 'any'
-// firstGenreElement.innerText = 'All Genres'
-// genreHtml.appendChild(firstGenreElement) 
+/**
+ * Fragment that contains all available options of either  Authors or genres
+ * 
+ * @param {String} Cartegory--filtering option, could either be Authors or genres
+ * @returns {DocumentFragment}
+ */
 
 const SearchOptions = (Cartegory) =>{
    const filterOption = document.createDocumentFragment()
 
-     
     const optionElement = document.createElement('option')
     optionElement.value = 'any'
     optionElement.innerText = `All ${Cartegory}`
@@ -68,40 +83,27 @@ const SearchOptions = (Cartegory) =>{
             
             return filterOption
     }
-  
+
+/**
+ * Loops over set of data about that specific category
+ * @param {string} optionCategory- Accept the parameter that could either be auth0r or genres
+ *  and create a options about the category
+ */
+
+const appendingMoreOptions = (optionCategory) =>{
     
-//Loop through genress and create option Element
-for (const [id, name] of Object.entries(genres)) {
+for (const [id, name] of Object.entries(optionCategory)) {
     const element = document.createElement('option') 
     element.value = id
     element.innerText = name
-    const filterCategory = SearchOptions('genres')
+   const filterCategory = SearchOptions(`"${optionCategory}"`)
     filterCategory.appendChild(element) 
     console.log(filterCategory)
-    
+    //document.querySelector('[data-search-genres]').appendChild(filterCategory)
 }
-
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
-
-/**@type {DocumentFragment} */
-const authorsHtml = document.createDocumentFragment()
-
-/**@type {HTMLOptionElement} */
-const firstAuthorElement = document.createElement('option')
-firstAuthorElement.value = 'any'
-firstAuthorElement.innerText = 'All Authors'
-authorsHtml.appendChild(firstAuthorElement)
-
-//Looping through authors and create option elements.
-for (const [id, name] of Object.entries(authors)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    authorsHtml.appendChild(element)
 }
-
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
-
+appendingMoreOptions(genres) 
+appendingMoreOptions(authors)
 
 //Check and set the initial theme based on system preference
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -136,7 +138,6 @@ document.querySelector('[data-settings-cancel]').addEventListener('click', () =>
     document.querySelector('[data-settings-overlay]').open = false
 })
 
-
 /**
  * Handles the click event when initiating a search
  */
@@ -151,7 +152,6 @@ document.querySelector('[data-header-search]').addEventListener('click', () => {
 document.querySelector('[data-header-settings]').addEventListener('click', () => {
     document.querySelector('[data-settings-overlay]').open = true 
 })
-
 
 document.querySelector('[data-list-close]').addEventListener('click', () => {
     document.querySelector('[data-list-active]').open = false
@@ -217,14 +217,9 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     }
 
     document.querySelector('[data-list-items]').innerHTML = ''
-    const newItems = document.createDocumentFragment()
-
-    for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-
-        const preview = createPreview({author,id,image,title})
-
-        newItems.appendChild(preview)
-    }
+    
+    fragment()
+    sliceBooks(result.slice(0, BOOKS_PER_PAGE))
 
     document.querySelector('[data-list-items]').appendChild(newItems)
     document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
@@ -239,15 +234,11 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
 })
 
 document.querySelector('[data-list-button]').addEventListener('click', () => {
-    const fragment = document.createDocumentFragment()
+    
+fragment()
+booksSlice(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) 
 
-    for (const { author, id, image, title } of matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) {
-         const preview = createPreview({author,id,image,title})
-
-        fragment.appendChild(preview)
-    }
-
-    document.querySelector('[data-list-items]').appendChild(fragment)
+    document.querySelector('[data-list-items]').appendChild(fragment())
     page += 1
 })
 
@@ -278,4 +269,4 @@ document.querySelector('[data-list-items]').addEventListener('click', (event) =>
         document.querySelector('[data-list-subtitle]').innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
         document.querySelector('[data-list-description]').innerText = active.description
     }
-})
+}) 
