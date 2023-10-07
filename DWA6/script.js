@@ -102,18 +102,28 @@ for (const [id, name] of Object.entries(optionCategory)) {
     //document.querySelector('[data-search-genres]').appendChild(filterCategory)
 }
 }
+
+const nightMode = () =>{
+    document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
+    document.documentElement.style.setProperty('--color-light', '10, 10, 20');
+}
+
+const dayMode = () =>{
+    document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
+    document.documentElement.style.setProperty('--color-light', '255, 255, 255');
+} 
+
 appendingMoreOptions(genres) 
-appendingMoreOptions(authors)
+appendingMoreOptions(authors) 
+
 
 //Check and set the initial theme based on system preference
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
-    document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-    document.documentElement.style.setProperty('--color-light', '10, 10, 20');
+    nightMode()
 } else {
     document.querySelector('[data-settings-theme]').value = 'day'
-    document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-    document.documentElement.style.setProperty('--color-light', '255, 255, 255');
+   dayMode()
 }
 
 document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
@@ -168,11 +178,9 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     const { theme } = Object.fromEntries(formData)
 
     if (theme === 'night') {
-        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-        document.documentElement.style.setProperty('--color-light', '10, 10, 20');
+       nightMode()
     } else {
-        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-        document.documentElement.style.setProperty('--color-light', '255, 255, 255');
+       dayMode()
     }
     
     document.querySelector('[data-settings-overlay]').open = false
