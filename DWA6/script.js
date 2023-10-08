@@ -59,8 +59,9 @@ const sliceBooks =(booksSlice)=>{
 for (const { author, id, image, title } of booksSlice) {
    
     const preview = createPreview({author,id,image,title}) 
-    return fragment().appendChild(preview)
+    fragment().appendChild(preview)
 } 
+ return fragment()
 
 } 
 
@@ -103,33 +104,87 @@ for (const [id, name] of Object.entries(optionCategory)) {
 }
 }
 
+/**
+ * Applies night mode styles to the web page.
+ * This function sets the '--color-dark' and '--color-light' CSS variables
+ * to appropriate values for night mode.
+ */
 const nightMode = () =>{
     document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
     document.documentElement.style.setProperty('--color-light', '10, 10, 20');
 }
+
+
+/**
+ * Applies day mode styles to the web page.
+ * This function sets the '--color-dark' and '--color-light' CSS variables
+ * to appropriate values for day mode.
+ */
 
 const dayMode = () =>{
     document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
     document.documentElement.style.setProperty('--color-light', '255, 255, 255');
 } 
 
+/**
+ * 
+ * @param {string} dataAttr 
+ * @param {string} [value ]
+ * @returns {HTMLElement}
+ */
+
+const getHtml = (dataAttr, value) =>{
+    const selector = value 
+        ? `[data-${dataAttr} = "${value}"]`
+        : `[data-${dataAttr}]`;
+
+    const element =document.querySelector(selector) 
+    const isHtmlElement = element instanceof HTMLElement;
+
+    if (!isHtmlElement) {
+        throw new Error (`${selector} attribute not found in html`)
+    }
+
+} 
+
+/**
+ * Handles the click event when canceling the search.
+ * Closes the search overlay.
+ * @returns {boolean} - Returns `false` to prevent default behavior of the click event.
+ */
+
+const handleSearchCancel = () => {
+    
+   return getHtml("search-overlay").open = false
+}; 
+
+
+/**
+ * Handles the click event when canceling the settings.
+ * Closes the settings overlay.
+ * @returns {boolean} - Returns `false` to prevent default behavior of the click event.
+ */
+const handleSettingsCancel = () => {
+   return getHtml("settings-overlay").open = false
+};
+
 appendingMoreOptions(genres) 
 appendingMoreOptions(authors) 
 
-
 //Check and set the initial theme based on system preference
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.querySelector('[data-settings-theme]').value = 'night'
+    getHtml("settings-theme").value = 'night'
     nightMode()
 } else {
-    document.querySelector('[data-settings-theme]').value = 'day'
+    getHtml("settings-theme").value = 'day'
    dayMode()
 }
 
-document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
-document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
 
-document.querySelector('[data-list-button]').innerHTML = `
+getHtml("list-button").innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
+getHtml("list-button").disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
+
+getHtml("list-button").innerHTML = `
     <span>Show more</span>
     <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `
@@ -137,34 +192,30 @@ document.querySelector('[data-list-button]').innerHTML = `
 /**
  * Handles the click event when canceling the search
  */
-document.querySelector('[data-search-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = false
-})
+getHtml("search-cancel").addEventListener('click', handleSearchCancel)
 
 /**
  * Handles the click event when canceling the settings
  */
-document.querySelector('[data-settings-cancel]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = false
-})
+getHtml("settings-cancel").addEventListener('click', handleSettingsCancel)
 
 /**
  * Handles the click event when initiating a search
  */
-document.querySelector('[data-header-search]').addEventListener('click', () => {
-    document.querySelector('[data-search-overlay]').open = true 
-    document.querySelector('[data-search-title]').focus()
+getHtml("header-search").addEventListener('click', () => {
+    getHtml("search-overlay").open = true 
+    getHtml("search-title").focus()
 })
 
 /**
  *  Handles the click event when opening settings
  */
-document.querySelector('[data-header-settings]').addEventListener('click', () => {
-    document.querySelector('[data-settings-overlay]').open = true 
+getHtml("header-settings").addEventListener('click', () => {
+    getHtml("settings-overlay").open = true 
 })
 
-document.querySelector('[data-list-close]').addEventListener('click', () => {
-    document.querySelector('[data-list-active]').open = false
+getHtml("list-close").addEventListener('click', () => {
+    getHtml("list-active").open = false
 })
 
 /**
@@ -172,7 +223,7 @@ document.querySelector('[data-list-close]').addEventListener('click', () => {
  * 
  *  @param {event} event - The form submission event
  */
-document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
+getHtml("settings-form").addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
     const { theme } = Object.fromEntries(formData)
@@ -183,7 +234,7 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
        dayMode()
     }
     
-    document.querySelector('[data-settings-overlay]').open = false
+    handleSettingsCancel()
 })
 
 /**
@@ -192,7 +243,7 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
  * @param {Event} event - The form submission for filtering books
  * 
  */
-document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
+getHtml("search-form").addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
     const filters = Object.fromEntries(formData)
@@ -219,38 +270,38 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     matches = result
 
     if (result.length < 1) {
-        document.querySelector('[data-list-message]').classList.add('list__message_show')
+        getHtml("list-message").classList.add('list__message_show')
     } else {
-        document.querySelector('[data-list-message]').classList.remove('list__message_show')
+        getHtml("list-message").classList.remove('list__message_show')
     }
 
-    document.querySelector('[data-list-items]').innerHTML = ''
+    getHtml("list-items").innerHTML = ''
     
     fragment()
     sliceBooks(result.slice(0, BOOKS_PER_PAGE))
 
-    document.querySelector('[data-list-items]').appendChild(newItems)
-    document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
+    getHtml("settings-overlay").appendChild(newItems)
+    getHtml("list-button").disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
 
-    document.querySelector('[data-list-button]').innerHTML = `
+    getHtml("list-button").innerHTML = `
         <span>Show more</span>
         <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
     `
 
     window.scrollTo({top: 0, behavior: 'smooth'});
-    document.querySelector('[data-search-overlay]').open = false
+   handleSearchCancel()
 })
 
-document.querySelector('[data-list-button]').addEventListener('click', () => {
+getHtml("list-button").addEventListener('click', () => {
     
 fragment()
 booksSlice(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) 
 
-    document.querySelector('[data-list-items]').appendChild(fragment())
+getHtml("list-items").appendChild(fragment())
     page += 1
 })
 
-document.querySelector('[data-list-items]').addEventListener('click', (event) => {
+getHtml("list-items").addEventListener('click', (event) => {
     const pathArray = Array.from(event.path || event.composedPath())
     let active = null
 
@@ -270,11 +321,13 @@ document.querySelector('[data-list-items]').addEventListener('click', (event) =>
     }
     
     if (active) {
-        document.querySelector('[data-list-active]').open = true
-        document.querySelector('[data-list-blur]').src = active.image
-        document.querySelector('[data-list-image]').src = active.image
-        document.querySelector('[data-list-title]').innerText = active.title
-        document.querySelector('[data-list-subtitle]').innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
-        document.querySelector('[data-list-description]').innerText = active.description
+        getHtml("list-active").open = true
+        getHtml("list-blur").src = active.image
+        getHtml("list-image").src = active.image
+        getHtml("list-title").innerText = active.title
+        getHtml("list-subtitle").innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`
+        getHtml("list-description").innerText = active.description
     }
-}) 
+})  
+
+
