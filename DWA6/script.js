@@ -55,13 +55,14 @@ const createPreview =({author, id, image, title}) =>{
  * 
  */
 
-const sliceBooks =(booksSlice)=>{
+const sliceBooks =(booksSlice)=>{ 
+   const fragment1 = fragment()
 for (const { author, id, image, title } of booksSlice) {
    
     const preview = createPreview({author,id,image,title}) 
-    fragment().appendChild(preview)
+    fragment1.appendChild(preview)
 } 
- return fragment()
+ return fragment1
 
 } 
 
