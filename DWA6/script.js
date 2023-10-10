@@ -296,6 +296,7 @@ getHtml("search-form").addEventListener('submit', (event) => {
 getHtml("list-button").addEventListener('click', () => {
     
 fragment()
+
 booksSlice(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) 
 
 getHtml("list-items").appendChild(fragment())
