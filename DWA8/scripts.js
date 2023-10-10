@@ -28,47 +28,52 @@ const fragment = () =>{
   * @returns {ButtonElement} - button containing all details of specific book
   */
  
- const createPreview =({author, id, image, title}) =>{
-     const element = document.createElement('button')
-     element.classList = 'preview'
-     element.setAttribute('data-preview', id)
- 
-     element.innerHTML = `
-         <img
-             class="preview__image"
-             src="${image}"
-         />
-         
-         <div class="preview__info">
-             <h3 class="preview__title">${title}</h3>
-             <div class="preview__author">${authors[author]}</div>
-         </div>
-     ` 
-     return element
- }
- 
- 
- /**
-  * Loop through books portion and create preview buttons
-  * 
-  * @param {Array} booksSlice- Portion of books to appear on the fragment
-  * @returns {fragment}- fragment with a specific portion of books
-  * 
-  */
- 
- const sliceBooks =(booksSlice)=> { 
-    const fragment1 = fragment()
- for (const { author, id, image, title } of booksSlice) {
-    
-     const preview = createPreview({author,id,image,title}) 
-     fragment1.appendChild(preview)
- } 
+ function preview({author, id, image, title}){
+
    
-   document.querySelector("[data-list-items]").appendChild(fragment1)
- } 
- 
- sliceBooks(matches.slice(0, BOOKS_PER_PAGE)) 
- 
+    const fragment1 = fragment() 
+    
+    const booksForPreview = {
+        author,
+        id,
+        title,
+        image,
+    createPreview({author, id, image, title}) {
+        const element = document.createElement('button')
+     element.classList = 'preview'
+         element.setAttribute('data-preview', id)
+    
+         element.innerHTML = `
+         <img
+        class="preview__image"
+        src="${image}"
+         />
+         <div class="preview__info">
+         <h3 class="preview__title">${title}</h3>
+         <div class="preview__author">${authors[author]}</div>
+     </div>
+    `  
+      return element
+    },
+    sliceBooks(previewSlice){ 
+        const fragment1 = fragment()
+     for (const { author, id, image, title } of previewSlice) {
+        
+         const bookPreview = this.createPreview({author,id,image,title}) 
+         fragment1.appendChild(bookPreview)
+     } 
+       
+       document.querySelector("[data-list-items]").appendChild(fragment1)
+     } 
+    
+    } 
+    return booksForPreview
+     }  
+
+     const firstBooksPreview = preview({books}) 
+     firstBooksPreview.sliceBooks(matches.slice(0, BOOKS_PER_PAGE))
+     console.log(firstBooksPreview)
+
  /**
   * Fragment that contains all available options of either  Authors or genres
   * 
@@ -259,8 +264,11 @@ const fragment = () =>{
  
      document.querySelector("[data-list-items]").innerHTML = ''
      
-     fragment()
-     sliceBooks(result.slice(0, BOOKS_PER_PAGE))
+     fragment() 
+     const secondBooksPreview = preview(books) 
+     secondBooksPreview.sliceBooks(result.slice(0, BOOKS_PER_PAGE))
+     
+     
  
      document.querySelector("[data-settings-overlay]").appendChild(newItems)
      document.querySelector("[data-list-button]").disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
@@ -277,8 +285,9 @@ const fragment = () =>{
  document.querySelector("[data-list-button]").addEventListener('click', () => {
      
  fragment()
+ const thirdBooksPreview = preview(books) 
+  thirdBooksPreview.sliceBooks(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE))
  
- sliceBooks(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE)) 
  
  document.querySelector("[data-list-items]").appendChild(fragment())
      page += 1
@@ -312,34 +321,10 @@ const fragment = () =>{
         document.querySelector("[data-list-description]").innerText = active.description
      }
  })  
- 
-function preview(props, previewSlice){
 
-({author, id, title, image} = props);
-const fragment = fragment()
-books = {
-author,
-id,
-title,
-image,
-createPreview(props) {
-    const element = document.createElement('button')
- element.classList = 'preview'
-     element.setAttribute('data-preview', this.id)
-
-     element.innerHTML = `
-     <img
-    class="preview__image"
-    src="${this.image}"
-     />
-     <div class="preview__info">
-     <h3 class="preview__title">${this.title}</h3>
-     <div class="preview__author">${authors[this.author]}</div>
- </div>
-`  
-  return element
-}
-} 
-
- } 
+ /**
+  * 
+  * @param {*} param0 
+  * @returns {object} 
+  */
  
