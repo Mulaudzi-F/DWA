@@ -28,51 +28,81 @@ const fragment = () =>{
   * @returns {ButtonElement} - button containing all details of specific book
   */
  
- function preview({author, id, image, title}){
+ const createPreview = ({author, id, image, title}) => {
+    const element = document.createElement('button')
+ element.classList = 'preview'
+     element.setAttribute('data-preview', id)
 
-   
-    const fragment1 = fragment() 
+     element.innerHTML = `
+     <img
+    class="preview__image"
+    src="${image}"
+     />
+     <div class="preview__info">
+     <h3 class="preview__title">${title}</h3>
+     <div class="preview__author">${authors[author]}</div>
+ </div>
+`  
+  return element
+} 
+
+
+/**
+ * Append book previews to the DOM.
+ *
+ * @param {object[]} previewSlice - An array of book information objects to display as previews.
+ */
+
+
+const appendPreviewToDom = (previewSlice) =>{
+    const fragment1 = fragment()
+    for (const { author, id, image, title } of previewSlice) {
+       
+        const bookPreview = createPreview({author,id,image,title}) 
+        fragment1.appendChild(bookPreview)
+    } 
+      
+      document.querySelector("[data-list-items]").appendChild(fragment1)
+    } 
+
+/**
+ * Create a component for managing book previews.
+ *
+ * @param {object} options - Configuration options.
+ * @param {object} options.author - Author information.
+ * @param {object} options.id - Book ID information.
+ * @param {object} options.title - Title information.
+ * @param {object} options.image - Image URL information.
+ * @returns {object} A component for managing book previews.
+ */
+
+ function createPreviewComponent({author, id, image, title}){
+
     
     const booksForPreview = {
         author,
         id,
         title,
         image,
-    createPreview({author, id, image, title}) {
-        const element = document.createElement('button')
-     element.classList = 'preview'
-         element.setAttribute('data-preview', id)
     
-         element.innerHTML = `
-         <img
-        class="preview__image"
-        src="${image}"
-         />
-         <div class="preview__info">
-         <h3 class="preview__title">${title}</h3>
-         <div class="preview__author">${authors[author]}</div>
-     </div>
-    `  
-      return element
-    },
+    /**
+     * Display book previews on the page.
+     *
+     * @param {object[]} previewSlice - An array of book information objects to display as previews.
+     */
+    
     sliceBooks(previewSlice){ 
-        const fragment1 = fragment()
-     for (const { author, id, image, title } of previewSlice) {
-        
-         const bookPreview = this.createPreview({author,id,image,title}) 
-         fragment1.appendChild(bookPreview)
-     } 
-       
-       document.querySelector("[data-list-items]").appendChild(fragment1)
-     } 
-    
+     appendPreviewToDom(previewSlice)
     } 
+    }
     return booksForPreview
      }  
 
-     const firstBooksPreview = preview({books}) 
+     const firstBooksPreview = createPreviewComponent({books}) 
      firstBooksPreview.sliceBooks(matches.slice(0, BOOKS_PER_PAGE))
-     console.log(firstBooksPreview)
+     
+     
+
 
  /**
   * Fragment that contains all available options of either  Authors or genres
@@ -265,7 +295,7 @@ const fragment = () =>{
      document.querySelector("[data-list-items]").innerHTML = ''
      
      fragment() 
-     const secondBooksPreview = preview(books) 
+     const secondBooksPreview = createPreviewComponent({books}) 
      secondBooksPreview.sliceBooks(result.slice(0, BOOKS_PER_PAGE))
      
      
@@ -285,7 +315,7 @@ const fragment = () =>{
  document.querySelector("[data-list-button]").addEventListener('click', () => {
      
  fragment()
- const thirdBooksPreview = preview(books) 
+ const thirdBooksPreview = createPreviewComponent({books}) 
   thirdBooksPreview.sliceBooks(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE))
  
  
