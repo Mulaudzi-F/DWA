@@ -38,4 +38,43 @@ form.addEventListener("submit", (event) => {
     
   } 
  
-}); 
+}); class BookPreview extends HTMLElement {
+  constructor() {
+    super();
+
+    // Create a shadow root
+    this.attachShadow({ mode: 'open' });
+
+    // Define the HTML template for the book preview
+    this.shadowRoot.innerHTML = `
+      <style>
+        /* Define styles for the shadow DOM */
+        /* You can customize the styles here */
+      </style>
+      <div class="preview">
+        <img class="preview__image" src="" alt="Book Image" />
+        <div class="preview__info">
+          <h3 class="preview__title"></h3>
+          <div class="preview__author"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  connectedCallback() {
+    // Extract data attributes from the custom element
+    const author = this.getAttribute('author');
+    const title = this.getAttribute('title');
+    const image = this.getAttribute('image');
+
+    // Update the content in the shadow DOM
+    this.shadowRoot.querySelector('.preview__image').src = image;
+    this.shadowRoot.querySelector('.preview__title').textContent = title;
+    this.shadowRoot.querySelector('.preview__author').textContent = author;
+  }
+}
+
+// Define the custom element
+customElements.define('book-preview', BookPreview);
+
+<book-preview author="Author Name" title="Book Title" image="book-image.jpg"></book-preview>
