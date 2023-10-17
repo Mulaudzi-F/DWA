@@ -16,22 +16,7 @@ const fragment = () =>{
  
  }
  
- //-------------------------Preview Component---------------------------//
-  
- customElements.define("book-preview",
-  class extends HTMLElement {
-    
-    constructor() {
-        super() 
-        const template = document.getElementById('preview-template').content;
-        this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(template.cloneNode(true));
-    } 
-    connectedCallBack(){
-        const author = this.getAttribute('author');
-        const title = this.getAttribute
-    } 
-    /**
+ /**
   * 
   * Create a preview button for a book.
   * @param {Object} book - Details of the book
@@ -43,7 +28,7 @@ const fragment = () =>{
   * @returns {ButtonElement} - button containing all details of specific book
   */
  
- createPreview = ({author, id, image, title}) => {
+ const createPreview = ({author, id, image, title}) => {
     const element = document.createElement('button')
  element.classList = 'preview'
      element.setAttribute('data-preview', id)
@@ -69,7 +54,7 @@ const fragment = () =>{
  */
 
 
-appendPreviewToDom = (previewSlice) =>{
+const appendPreviewToDom = (previewSlice) =>{
     const fragment1 = fragment()
     for (const { author, id, image, title } of previewSlice) {
        
@@ -91,7 +76,7 @@ appendPreviewToDom = (previewSlice) =>{
  * @returns {object} A component for managing book previews.
  */
 
- createPreviewComponent({author, id, image, title}){
+ function createPreviewComponent({author, id, image, title}){
 
     
     const booksForPreview = {
@@ -112,11 +97,10 @@ appendPreviewToDom = (previewSlice) =>{
     }
     return booksForPreview
      }  
-     
-  }
- ) 
 
- 
+     const firstBooksPreview = createPreviewComponent({books}) 
+     firstBooksPreview.sliceBooks(matches.slice(0, BOOKS_PER_PAGE))
+     
      
 
 
@@ -331,6 +315,8 @@ appendPreviewToDom = (previewSlice) =>{
  document.querySelector("[data-list-button]").addEventListener('click', () => {
      
  fragment()
+ const thirdBooksPreview = createPreviewComponent({books}) 
+  thirdBooksPreview.sliceBooks(matches.slice(page * BOOKS_PER_PAGE, (page + 1) * BOOKS_PER_PAGE))
  
  
  document.querySelector("[data-list-items]").appendChild(fragment())
@@ -366,9 +352,3 @@ appendPreviewToDom = (previewSlice) =>{
      }
  })  
 
- /**
-  * 
-  * @param {*} param0 
-  * @returns {object} 
-  */
- 
