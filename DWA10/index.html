@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet.css" href="style.css">
+    <title>Interactive web apps</title>
+    <link href="styles.css" rel="stylesheet"></link>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.10.0/cdn/themes/light.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.10.0/cdn/shoelace-autoloader.js"></script>
+
+    <script src="./script.js" defer></script>
+</head>
+<body>
+    <h1>Tally Count App</h1>
+      <main class="counter"> 
+        <sl-input class="counter__value" data-key="number" readonly value="0"></sl-input>
+
+        
+        <div class="counter__actions">
+            <sl-button  size="large" variant="neutral" data-key="subtract"> -</sl-button>
+
+            <sl-button size="large" variant="neutral" data-key="add" >+</sl-button> 
+            <sl-button size="large" variant="neutral" data-key="reset" >reset</sl-button>
+
+        </div>
+      </main>
+      <footer class="footer">
+        Inspired by
+        <a class="footer__link" href="http://tallycount.app/">Tally Count</a>
+        Note that this is merly a student practice project for learning
+        JavaScript.
+      </footer>
+</body>
+</html>
