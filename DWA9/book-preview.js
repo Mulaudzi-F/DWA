@@ -12,7 +12,7 @@ class BookPreview extends HTMLElement {
     this.render();
   }
 
-  static get observedAttributes() {
+  static get observedAttributes()  {
     // Specify the attributes to observe for changes
     return ["data-book"];
   }
@@ -75,11 +75,13 @@ class BookPreview extends HTMLElement {
       <img class="preview__image" src="${image}" alt="Book Cover">
       <div class="preview__info">
         <h3 class="preview__title">${title}</h3>
-        <p class="preview__author">${author[authors]}</p>
+        <p class="preview__author">${authors[author]}</p>
       </div>
     `;
   }
-}
+}  
+
 
 // Define the custom element "book-preview" and associate it with the BookPreview class
 customElements.define("book-preview", BookPreview);
+console.log(BookPreview)

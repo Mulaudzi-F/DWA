@@ -16,21 +16,11 @@ const fragment = () =>{
  
  }
  
- /**
-  * 
-  * Create a preview button for a book.
-  * @param {Object} book - Details of the book
-  * @param {string} book.author - Name of author
-  * @param {string} book.id - The book's unique Id
-  * @param {string} book.image - Url of the book cover image
-  * @param {string} book.title- book's title
-  * 
-  * @returns {ButtonElement} - button containing all details of specific book
-  */
+
  
- const createPreview = (book) => {
+ const createPreview = (books) => {
   const element = document.createElement("book-preview")
-element.setAttribute("data-book", JSON.stringify(book))
+  element.setAttribute("data-book", JSON.stringify(books))
   return element
 } 
 
@@ -310,8 +300,8 @@ const appendPreviewToDom = (previewSlice) =>{
  document.querySelector("[data-list-items]").appendChild(fragment())
      page += 1
  })
- 
- document.querySelector("[data-list-items]").addEventListener('click', (event) => {
+ console.log( document.querySelector("book-preview"))
+ document.querySelector("book-preview").addEventListener('click', (event) => {
      const pathArray = Array.from(event.path || event.composedPath())
      let active = null
  
