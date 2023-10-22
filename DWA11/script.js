@@ -1,13 +1,19 @@
-function createStore(reducer){
-    let state = 0;
+/**
+ * accepts first class function as an input 
+ * it's meant to out the value of a counter when the action has dipatched
+ * @param {function} reducer 
+ * @returns {object}
+ */
+function createCounter(reducer){
+    let value = 0;
     const subscribers = [];
 
-    function getState() {
-        return state
+    function getValue() {
+        return value
     } 
 
     function dispatch(action) {
-        state = reducer(state, action) 
+        value = reducer(value, action) 
         subscribers.forEach((subscriber) => subscriber())  
     } 
 
@@ -23,35 +29,40 @@ function createStore(reducer){
     } 
 
     return {
-        getState,
+        getValue,
         dispatch,
         subscribe,
     };
 } 
 
-function counterReducer(state, action){
+function counterReducer(value, action){
     switch (action.type){
         case 'ADD':
-            return state +1;
+            return value +1;
         
         case 'SUBSTRACT':
-            return state -1;
+            return value -1;
 
         case "RESET":
             return 0;
         
         default:
-            return state;
+            return value;
     }
 } 
 
-const counter = createStore(counterReducer) 
+const counter = createCounter(counterReducer) 
 
+/**
+ * Output the current value when called
+ * 
+ */
 const unsubscribe = counter.subscribe(() =>{
-    console.log('Updated state:', counter.getState() )
+    console.log('counter Value=', counter.getValue() )
 }) 
 
 counter.dispatch({type: "ADD"})
 counter.dispatch({type: "ADD"}) 
 
-unsubscribe()
+unsubscribe() 
+console.log(counter)
