@@ -1,9 +1,12 @@
+
+
 /**
  * accepts first class function as an input 
  * it's meant to out the value of a counter when the action has dipatched
  * @param {function} reducer 
  * @returns {object}
  */
+
 function createCounter(reducer){
     let value = 0;
     const subscribers = [];
