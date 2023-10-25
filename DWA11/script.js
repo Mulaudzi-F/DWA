@@ -1,4 +1,4 @@
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 
 /**
  * accepts first class function as an input 
@@ -68,4 +68,3 @@ counter.dispatch({type: "ADD"})
 counter.dispatch({type: "ADD"}) 
 
 unsubscribe() 
-console.log(counter)
